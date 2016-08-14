@@ -5,9 +5,30 @@
 	<classpathentry kind="src" path="resource"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="src/main/resources/lib/dom4j-1.6.1.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/DROOLS"/>
 	<classpathentry kind="lib" path="src/main/resources/lib/iText-2.1.7.jar"/>
 	<classpathentry kind="lib" path="src/main/resources/lib/JEFFCode.jar"/>
 	<classpathentry kind="lib" path="src/main/resources/lib/org.eclipse.jdt.core_3.11.2.v20160128-0629.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/DROOLS/lib/antlr-runtime.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/DROOLS/lib/drools-compiler.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/DROOLS/lib/drools-core.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/DROOLS/lib/drools-decisiontables.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/DROOLS/lib/drools-jsr94.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/DROOLS/lib/drools-templates.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/DROOLS/lib/jbpm-bpmn2.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/DROOLS/lib/jbpm-flow-builder.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/DROOLS/lib/jbpm-flow.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/DROOLS/lib/jsr94.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/DROOLS/lib/junit.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/DROOLS/lib/kie-api.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/DROOLS/lib/kie-internal.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/DROOLS/lib/mvel2.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/DROOLS/lib/org.eclipse.jdt.core_3.11.2.v20160128-0629.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/DROOLS/lib/poi-ooxml.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/DROOLS/lib/poi.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/DROOLS/lib/protobuf-java.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/DROOLS/lib/slf4j-api.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/DROOLS/lib/xmlpull.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/DROOLS/lib/xpp3_min.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/DROOLS/lib/xstream.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
