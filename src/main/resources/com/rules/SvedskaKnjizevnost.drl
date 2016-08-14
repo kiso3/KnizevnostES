@@ -1,0 +1,973 @@
+//created on: Jul 20, 2016
+package com.rules
+
+//list any import classes here.
+import org.goodoldai.jeff.explanation.ImageData;
+import org.goodoldai.jeff.explanation.data.TwoDimData;
+import org.goodoldai.jeff.explanation.ExplanationChunk;
+import org.goodoldai.jeff.explanation.builder.ExplanationChunkBuilderFactory;
+import org.goodoldai.jeff.explanation.builder.DefaultExplanationBuilder;
+import org.goodoldai.jeff.explanation.data.Tuple;
+import org.goodoldai.jeff.explanation.data.Dimension;
+
+import domen.Knizevnost;
+import org.goodoldai.jeff.wizard.JEFFWizard;
+
+//declare any global variables here
+
+global JEFFWizard wizard; 
+
+rule "DramaTragedija"
+	lock-on-active true
+    when
+        k: Knizevnost(
+	        knjizevniRod == "Drama"
+	        && kategorijaDraskihDela == "Tragedija"
+	        && preporucenoDelo == null
+	        && preporucenaDela == null
+        )
+    then                    
+        drools.setFocus("DramaTragedija");
+        wizard.addTextStrategic(null,"DramaTragedija",null,null);
+        System.out.println("DramaTragedija");      
+end
+
+rule "HorNijePrisutan"
+	lock-on-active true
+	agenda-group "DramaTragedija"
+    when
+        k: Knizevnost(        
+	        vremeskiPeriod == "Anticka"
+	        && ulogaHora == "Nije mi poznata"
+               )        
+    then                
+        String[] dela = {"Euripid - Helena"};		
+     	k.setPreporucenaDela(dela);           
+ 	    wizard.addText("DramaTragedija","HorNijePrisutan", null, dela);
+ 	    wizard.addImage("DramaTragedija",
+	         "HorNijePrisutan", null,
+			 new ImageData("/image/resenja/Euripid - Helena.jpg") ); 	    
+ 	    System.out.println("HorNijePrisutan");
+
+end
+
+rule "HorPrisutanMuskiLikovi"
+	lock-on-active true    
+    agenda-group "DramaTragedija"
+    when
+         k: Knizevnost(
+        vremeskiPeriod == "Anticka"
+        && ulogaHora == "Poznata"
+        && pol == "Muski"        
+        )
+    then
+        //actions
+        String[] dela = {"Euripid - Helena","Sofokle - Antigona"};		
+         k.setPreporucenaDela(dela);         
+        wizard.addText("DramaTragedija","HorPrisutanMuskiLikovi", null, dela);
+ 	    wizard.addImage("DramaTragedija",
+	         "HorPrisutanMuskiLikovi", null,
+			 new ImageData("/image/resenja/Aeschylus Armahedon.jpg") ); 
+  	    wizard.addImage("DramaTragedija",
+	         "HorPrisutanMuskiLikovi", null,
+			 new ImageData("/image/resenja/Sofokle Antigona.jpg") ); 
+       System.out.println("HorPrisutanMuskiLikovi");   
+end
+
+rule "HorPrisutanZenskiLikovi"
+lock-on-active true
+agenda-group "DramaTragedija"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Anticka"
+        && pol == "Zenski"        
+        )
+	then        
+        String[] dela = {"Euridip"};		
+ 		k.setPreporucenaDela(dela);        
+     	wizard.addText("DramaTragedija","HorPrisutanZenskiLikovi", null, dela);
+ 	  	wizard.addImage("DramaTragedija",
+	         "HorPrisutanZenskiLikovi", null,
+			 new ImageData("/image/resenja/Euripid - Helena.jpg") );         
+		System.out.println("HorPrisutanZenskiLikovi");
+end
+
+rule "ReligiozniMotivi"
+lock-on-active true
+agenda-group "DramaTragedija"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Srednji vek"
+        && nacinIzvodjenjaDramskogDela == "Igrana"
+        && karakterDela == "Religiozni"        
+        )
+	then
+        String[] dela = {"Zamak istrajnosti","Osuda krkanluka", "Svako"};		
+        k.setPreporucenaDela(dela);           
+        
+     	wizard.addText("DramaTragedija","ReligiozniMotivi", null, dela);
+ 	 	
+ 	 	wizard.addImage("DramaTragedija",
+	         "ReligiozniMotivi", null,
+			 new ImageData("/image/resenja/Zamak istrajnosti.jpg") ); 
+		wizard.addImage("DramaTragedija",
+	         "SrednjeVekovnaDramaReligiozniMotivi", null,
+			 new ImageData("/image/resenja/Osuda krkanluka.jpg") );
+		wizard.addImage("DramaTragedija",
+	         "ReligiozniMotivi", null,
+			 new ImageData("/image/resenja/Svako.jpg") );  
+			          
+		System.out.println("ReligiozniMotivi");
+end
+
+rule "IstorijskiMotivi"
+lock-on-active true
+agenda-group "DramaTragedija"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Srednji vek"
+        && nacinIzvodjenjaDramskogDela == "Igrana"
+        && karakterDela == "Drustveni"
+        && karakterDrustvenihDela == "Istorijski"     
+        )
+	then
+        String[] dela = {"Šekspir - Julije Cezar","Sekspir - Hamlet"};		
+        k.setPreporucenaDela(dela);      
+             
+     	wizard.addText("DramaTragedija","IstorijskiMotivi", null, dela);  
+ 		wizard.addImage("DramaTragedija",
+	         "IstorijskiMotivi", null,
+			 new ImageData("/image/resenja/Sekspir Julije Cezar.jpg") );
+		wizard.addImage("DramaTragedija",
+	         "IstorijskiMotivi", null,
+			 new ImageData("/image/resenja/Sekspir Hamlet.jpg") );  
+     	      
+		System.out.println("IstorijskiMotivi");
+end
+
+rule "LjubavniiMotivi"
+lock-on-active true
+agenda-group "DramaTragedija"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Srednji vek"
+        && nacinIzvodjenjaDramskogDela == "Igrana"
+        && karakterDela == "Drustveni"
+        && karakterDrustvenihDela == "Ljubavni"     
+        )
+	then
+        String[] dela = {"Šekspir - Romeo i Julija","Viktor Hugo - Ruy Blas"};		
+        k.setPreporucenaDela(dela);           
+     	
+     	wizard.addText("DramaTragedija","LjubavniiMotivi", null, dela);  
+     	wizard.addImage("DramaTragedija",
+	         "LjubavniiMotivi", null,
+			 new ImageData("/image/resenja/Viktor Hugo Ruy Blas.jpg") );
+		wizard.addImage("DramaTragedija",
+	         "LjubavniiMotivi", null,
+			 new ImageData("/image/resenja/Sekspir Romeo i Julija.jpg") );        
+		System.out.println("LjubavniiMotivi");
+end
+
+rule "MoralniMotivi"
+lock-on-active true
+agenda-group "DramaTragedija"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Srednji vek"
+        && nacinIzvodjenjaDramskogDela == "Igrana"
+        && karakterDela == "Drustveni"
+        && karakterDrustvenihDela == "Moralitet"     
+        )
+	then
+        String[] dela = {"Gete - Faust"};		
+        k.setPreporucenaDela(dela);           
+     	
+     	wizard.addText("DramaTragedija","MoralniMotivi", null, dela); 
+ 		wizard.addImage("DramaTragedija",
+	         "MoralniMotivi", null,
+			 new ImageData("/image/resenja/Gete Faust.jpg") );           
+		System.out.println("MoralniMotivi");
+end
+
+rule "SrednjeVekovnaOpera"
+lock-on-active true
+agenda-group "DramaTragedija"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Srednji vek"
+        && nacinIzvodjenjaDramskogDela == "Pevana"    
+        )
+	then
+        String[] dela = {"Zorz ize - Karen", "Pjort Iljic Cajkovski - Evgenije Onjegin"};		
+        k.setPreporucenaDela(dela);           
+        
+     	wizard.addText("DramaTragedija","SrednjeVekovnaOpera", null, dela);    
+     	wizard.addImage("DramaTragedija",
+	         "SrednjeVekovnaOpera", null,
+			 new ImageData("/image/resenja/Zorz Bize Karen.jpg") );     
+	    wizard.addImage("DramaTragedija",
+	         "SrednjeVekovnaOpera", null,
+			 new ImageData("/image/resenja/Aleksandar Puskin Evgenij Onjegin.jpeg") );  
+		System.out.println("SrednjeVekovnaOpera");
+end
+/*Drama komedija*/
+rule "DramaKomedija"
+	lock-on-active true
+    when
+        k: Knizevnost(
+	        knjizevniRod == "Drama"
+	        && kategorijaDraskihDela == "Komedija"
+	        && preporucenoDelo == null
+	        && preporucenaDela == null
+        )
+    then                    
+        drools.setFocus("DramaKomedija");
+        wizard.addTextStrategic(null,"DramaKomedija",null,null);
+        System.out.println("DramaKomedija");      
+end
+
+rule "AntickaHorPrisutan"
+lock-on-active true
+agenda-group "DramaKomedija"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Anticka"
+        && ulogaHora == "Poznata"    
+        )
+	then
+        String[] dela = {"Aristofen - Zabe"};		
+        k.setPreporucenaDela(dela);           
+        
+     	wizard.addText("DramaKomedija","AntickaHorPrisutan", null, dela);   
+ 		wizard.addImage("DramaTragedija",
+	         "AntickaHorPrisutan", null,
+			 new ImageData("/image/resenja/Aristofan Zabe.jpg") );       
+		System.out.println("AntickaHorPrisutan");
+end
+
+rule "AntickaHorNijePrisutan"
+lock-on-active true
+agenda-group "DramaKomedija"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Anticka"
+        && ulogaHora == "Nije mi poznata"    
+        )
+	then
+        String[] dela = {"Meader"};  		
+        k.setPreporucenaDela(dela);           
+     	
+     	wizard.addText("DramaKomedija","AntickaHorNijePrisutan", null, dela); 
+ 	 	wizard.addImage("DramaTragedija",
+	         "AntickaHorNijePrisutan", null,
+			 new ImageData("/image/resenja/Meader.jpg") );        
+		System.out.println("AntickaHorNijePrisutan");
+end
+
+rule "KomedijaEuriditna"
+lock-on-active true
+agenda-group "DramaKomedija"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Srednji vek"
+        && klasnaPodelaDrustva == "Obicni ljudi" 
+        && kategorijaDramskeKomedije == "Euruitna"
+        )
+	then
+        String[] dela = {"Marin Drazic - Novela od stranca"};  		
+        k.setPreporucenaDela(dela);           
+        
+     	wizard.addText("DramaKomedija","KomedijaEuriditna", null, dela);   
+ 	 	wizard.addImage("DramaTragedija",
+	         "KomedijaEuriditna", null,
+			 new ImageData("/image/resenja/Marin Drazic Novela od stanca.jpg") );      
+		System.out.println("KomedijaEuriditna");
+end
+
+rule "KomedijaKaraktera"
+lock-on-active true
+agenda-group "DramaKomedija"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Srednji vek"
+        && klasnaPodelaDrustva == "Obicni ljudi" 
+        && kategorijaDramskeKomedije == "Komedija karaktera"
+        )
+	then
+        String[] dela = {"Molijerov - Tvrdica"};  		
+        k.setPreporucenaDela(dela);        
+           
+     	wizard.addText("DramaKomedija","KomedijaKaraktera", null, dela);  
+     	wizard.addImage("DramaTragedija",
+	         "KomedijaKaraktera", null,
+			 new ImageData("/image/resenja/Molijer Tvrdica.jpg") );       
+		System.out.println("KomedijaKaraktera");
+end
+
+rule "KomedijaZapleta"
+lock-on-active true
+agenda-group "DramaKomedija"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Srednji vek"
+        && klasnaPodelaDrustva == "Obicni ljudi" 
+        && kategorijaDramskeKomedije == "Komedija zapleta"
+        )
+	then
+        String[] dela = {"Molijerov - Skola za zene","Bomarse - Sibirski berberin"};  		
+        k.setPreporucenaDela(dela);     
+              
+     	wizard.addText("DramaKomedija","KomedijaZapleta", null, dela);   
+ 	    wizard.addImage("DramaTragedija",
+	         "DramaKomedijaZapleta", null,
+			 new ImageData("/image/resenja/Molijer Tvrdica.jpg") );  
+	  	  wizard.addImage("DramaTragedija",
+	         "DramaKomedijaZapleta", null,
+			 new ImageData("/image/resenja/Bomarse Sibirski berberin.jpg") );      
+		System.out.println("KomedijaZapleta");
+end
+
+rule "KomedijaVisokoDrustvo"
+lock-on-active true
+agenda-group "DramaKomedija"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Srednji vek"
+        && klasnaPodelaDrustva == "Visoko drustvo" 
+        
+        )
+	then
+        String[] dela = {"Sekspir - Komedija zabune","Sekspir - Komedija san letnje noci"};  		
+        k.setPreporucenaDela(dela);           
+     	
+     	wizard.addText("DramaKomedija","KomedijaVisokoDrustvo", null, dela); 
+ 	 	wizard.addImage("DramaTragedija",
+	         "KomedijaVisokoDrustvo", null,
+			 new ImageData("/image/resenja/Sekspir Komedija zabune.jpg") );  
+	  	wizard.addImage("DramaTragedija",
+	         "KomedijaVisokoDrustvo", null,
+			 new ImageData("/image/resenja/Sekspir Komedija San letnje noci.jpg") );         
+		System.out.println("KomedijaVisokoDrustvo");
+end
+
+
+rule "DramaModerna"
+	lock-on-active true
+    when
+        k: Knizevnost(
+	        knjizevniRod == "Drama"
+	        && kategorijaDraskihDela == "Moderna"
+	        && preporucenoDelo == null
+	        && preporucenaDela == null
+        )
+    then                    
+        drools.setFocus("DramaModerna");
+        wizard.addTextStrategic(null,"DramaModerna",null,null);
+        System.out.println("DramaModerna");      
+end
+
+rule "Antidrama"
+lock-on-active true
+agenda-group "DramaModerna"
+	when
+     	k: Knizevnost(
+         kategorijaModerneDrame == "Antidrama" 
+        
+        )
+	then
+        String[] dela = {"Cekajuci godoa","Celava pevacica"};  		
+        k.setPreporucenaDela(dela);           
+        
+     	wizard.addText("DramaModerna","Antidrama", null, dela);   
+     	 	 	wizard.addImage("DramaTragedija",
+	         "Antidrama", null,
+			 new ImageData("/image/resenja/Samjuel Beket Cekajuci Godoa.jpg") );  
+	  	wizard.addImage("DramaTragedija",
+	         "Antidrama", null,
+			 new ImageData("/image/resenja/Ezen Jonesko Celava pevacica.jpg") );       
+		System.out.println("Antidrama");
+end
+
+rule "NaturalistickaDramaObicniLjudiMuskarci"
+lock-on-active true
+agenda-group "DramaModerna"
+	when
+     	k: Knizevnost(
+         kategorijaModerneDrame == "Naturalisticka drama" 
+        && klasnaPodelaDrustva == "Obicni ljudi" 
+        && pol == "Muski"
+        )
+	then
+        String[] dela = {"Cehov - Ujka Vanja"};  		
+        k.setPreporucenaDela(dela);           
+        
+     	wizard.addText("DramaModerna","NaturalistickaDramaObicniLjudiMuskarci", null, dela);   
+ 		wizard.addImage("DramaTragedija",
+	         "NaturalistickaDramaObicniLjudiMuskarci", null,
+			 new ImageData("/image/resenja/Cehov Ujka Vanja.jpg") );      
+		System.out.println("NaturalistickaDramaObicniLjudiMuskarci");
+end
+
+
+rule "NaturalistickaDramaObicniLjudiZene"
+lock-on-active true
+agenda-group "DramaModerna"
+	when
+     	k: Knizevnost(
+         kategorijaModerneDrame == "Naturalisticka drama" 
+        && klasnaPodelaDrustva == "Obicni ljudi" 
+        && pol == "Zenski"
+        )
+	then
+        String[] dela = {"Henrik Ibsen - Nora"};  		
+        k.setPreporucenaDela(dela); 
+                  
+     	wizard.addText("DramaModerna","NaturalistickaDramaObicniLjudiZene", null, dela);  
+ 	 	wizard.addImage("DramaTragedija",
+	         "NaturalistickaDramaObicniLjudiZene", null,
+			 new ImageData("/image/resenja/Henrik Ibsen Nora.jpg") );       
+		System.out.println("NaturalistickaDramaObicniLjudiZene");
+end
+
+rule "NaturalistickaDramaVisokoDrustvoMuskarci"
+lock-on-active true
+agenda-group "DramaModerna"
+	when
+     	k: Knizevnost(
+         kategorijaModerneDrame == "Naturalisticka drama" 
+        && klasnaPodelaDrustva == "Visoko drustvo" 
+        && pol == "Muski"
+        )
+	then
+        String[] dela = {"Nema resenja"};  		
+        k.setPreporucenaDela(dela);           
+     	wizard.addText("DramaModerna","NaturalistickaDramaVisokoDrustvoMuskarci", null, dela);        
+		System.out.println("NaturalistickaDramaVisokoDrustvoMuskarci");
+end
+
+rule "NaturalistickaDramaVisokoDrustvoZene"
+lock-on-active true
+agenda-group "DramaModerna"
+	when
+     	k: Knizevnost(
+         kategorijaModerneDrame == "Naturalisticka drama" 
+        && klasnaPodelaDrustva == "Visoko drustvo" 
+        && pol == "Zenski"
+        )
+	then
+        String[] dela = {"August Strindberg - Gospodjica Julija"};  		
+        k.setPreporucenaDela(dela);           
+     	
+     	wizard.addText("DramaModerna","NaturalistickaDramaVisokoDrustvoZene", null, dela);      
+     	wizard.addImage("DramaTragedija",
+	         "NaturalistickaDramaObicniLjudiZene", null,
+			 new ImageData("/image/resenja/August Strindberg Gospodjica Julija.jpg") );    
+		System.out.println("NaturalistickaDramaVisokoDrustvoZene");
+end
+
+/*PROZA*/
+
+rule "ProzaPsiholoska"
+	lock-on-active true
+    when
+        k: Knizevnost(
+	        knjizevniRod == "Proza"
+	        && kategorijaProznihDela == "Psiholoska"
+	        && preporucenoDelo == null
+	        && preporucenaDela == null
+        )
+    then                    
+        drools.setFocus("ProzaPsiholoska");
+        wizard.addTextStrategic(null,"ProzaPsiholoska",null,null);
+        System.out.println("ProzaPsiholoska");      
+end
+
+
+/*Proza Psoholoska*/
+rule "PrvoLice"
+lock-on-active true
+agenda-group "ProzaPsiholoska"
+	when
+     	k: Knizevnost(
+        tipPripovedaca == "1 lice"       
+        )
+	then
+        String[] dela = {"Marsel Prust Jedna - Jedna Svanova Ljubav"};  		
+        k.setPreporucenaDela(dela);           
+     	
+     	wizard.addText("ProzaPsiholoska","PrvoLice", null, dela);
+ 	 	wizard.addImage("ProzaPsiholoska",
+	         "PrvoLice", null,
+			 new ImageData("/image/resenja/Marsel Prust Jedna Svanova ljubav.jpg") );         
+		System.out.println("PrvoLice");
+end
+
+rule "TreceLice"
+lock-on-active true
+agenda-group "ProzaPsiholoska"
+	when
+     	k: Knizevnost(
+        tipPripovedaca == "3 lice"       
+        )
+	then
+        String[] dela = {"Onore de Balzak - Cica Gorijo"};  		
+        k.setPreporucenaDela(dela);           
+        
+     	wizard.addText("ProzaPsiholoska","TreceLice", null, dela);   
+       	wizard.addImage("ProzaPsiholoska",
+	         "TreceLice", null,
+			 new ImageData("/image/resenja/Onore de Balzak Cica Gorijo.jpg") );         
+		System.out.println("TreceLice");
+end
+
+
+rule "TokSvesti"
+lock-on-active true
+agenda-group "ProzaPsiholoska"
+	when
+     	k: Knizevnost(
+        tipPripovedaca == "Tok svesti"       
+        )
+	then
+        String[] dela = {"Gistav Flober - Gospodja Bovari"};  		
+        k.setPreporucenaDela(dela);           
+        
+     	wizard.addText("ProzaPsiholoska","TokSvesti", null, dela); 
+     	wizard.addImage("ProzaPsiholoska",
+	         "TokSvesti", null,
+			 new ImageData("/image/resenja/Gistav Flober Gospodja Bovari.jpg") );         
+		System.out.println("TokSvesti");
+end
+
+
+
+/*Proza istorijska*/
+rule "ProzaIstorijska"
+	lock-on-active true
+    when
+        k: Knizevnost(
+	        knjizevniRod == "Proza"
+	        && kategorijaProznihDela == "Istorijsak"
+	        
+	        && preporucenoDelo == null
+	        && preporucenaDela == null
+        )
+    then                    
+        drools.setFocus("ProzaIstorijska");
+        wizard.addTextStrategic(null,"ProzaIstorijska",null,null);
+        System.out.println("ProzaIstorijska");      
+end
+
+
+rule "AntickaGrckaOdlazakJunaka"
+lock-on-active true
+agenda-group "ProzaIstorijska"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Anticka"    
+        && vremeskaPodelaAtickiPeriod == "Grcka"
+        && odlazakPovratakJunaka == "Odlazak junaka u rat"   
+        )
+	then
+        String[] dela = {"Homer - Ilijada"};  		
+        k.setPreporucenaDela(dela);     
+              
+     	wizard.addText("ProzaIstorijska","AntickaGrckaOdlazakJunaka", null, dela);      
+     	wizard.addImage("ProzaPsiholoska",
+	         "AntickaGrckaOdlazakJunaka", null,
+			 new ImageData("/image/resenja/Homer Ilijada.jpg") );     
+		System.out.println("AntickaGrckaOdlazakJunaka");
+end
+
+rule "AntickaGrckaPovratakJunaka"
+lock-on-active true
+agenda-group "ProzaIstorijska"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Anticka"    
+        && vremeskaPodelaAtickiPeriod == "Grcka"
+        && odlazakPovratakJunaka == "Povratak junaka iz rata"   
+        )
+	then
+        String[] dela = {"Homer - Odiseja"};  		
+        k.setPreporucenaDela(dela);     
+              
+     	wizard.addText("ProzaIstorijska","AntickaGrckaPovratakJunaka", null, dela);   
+     	wizard.addImage("ProzaPsiholoska",
+	         "ProzaPsiholoskaTokSvesti", null,
+			 new ImageData("/image/resenja/Homer Odiseja.jpg") );        
+		System.out.println("AntickaGrckaPovratakJunaka");
+end
+
+rule "AntickaRim"
+lock-on-active true
+agenda-group "ProzaIstorijska"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Anticka"    
+        && vremeskaPodelaAtickiPeriod == "Rim"           
+        )
+	then
+        String[] dela = {"Vergeije Enedin"};  		
+        k.setPreporucenaDela(dela);           
+        
+     	wizard.addText("ProzaIstorijska","AntickaRim", null, dela);
+ 	    wizard.addImage("ProzaPsiholoska",
+	         "AntickaRim", null,
+			 new ImageData("/image/resenja/Vergilije Enejin.jpg") );          
+		System.out.println("AntickaRim");
+end
+
+rule "SrednjiVekAntickoNasledje"
+lock-on-active true
+agenda-group "ProzaIstorijska"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Srednji vek"    
+        && karakterDela == "Anticko nasledje"           
+        )
+	then
+        String[] dela = {"Vergeije Enedin"};  		
+        k.setPreporucenaDela(dela);          
+         
+     	wizard.addText("ProzaIstorijska","SrednjiVekAntickoNasledje", null, dela);
+ 	 	wizard.addImage("ProzaIstorijska",
+	         "SrednjiVekAntickoNasledje", null,
+			 new ImageData("/image/resenja/Vergilije Enejin.jpg") );         
+		System.out.println("SrednjiVekAntickoNasledje");
+end
+
+
+rule "SrednjiVekReligiozna"
+lock-on-active true
+agenda-group "ProzaIstorijska"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Srednji vek"    
+        && karakterDela == "Religiozno"           
+        )
+	then
+        String[] dela = {"Jovan Lestvicnik Lestvica"};  		
+        k.setPreporucenaDela(dela);           
+     	
+     	wizard.addText("ProzaIstorijska","SrednjiVekReligiozna", null, dela);
+     	wizard.addImage("ProzaIstorijska",
+	         "SrednjiVekReligiozna", null,
+			 new ImageData("/image/resenja/Jovan Lestvicnik Lestvica.jpg") );        
+		System.out.println("SrednjiVekReligiozna");
+end
+
+rule "ModernaLjubavnaTematikaObimnoDelo"
+lock-on-active true
+agenda-group "ProzaIstorijska"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Moderna"    
+        && ljubavnaTematika == "Prisutna"   
+        && velicinaDela == "Kratko delo"        
+        )
+	then
+        String[] dela = {"Carls Diken - Velika Ocekivanja"};  		
+        k.setPreporucenaDela(dela);           
+        
+     	wizard.addText("ProzaIstorijska","ModernaLjubavnaTematikaObimnoDelo", null, dela);    
+ 	    wizard.addImage("ProzaIstorijska",
+	         "ModernaLjubavnaTematikaObimnoDelo", null,
+			 new ImageData("/image/resenja/Carl Dikens Velika ocekivanja.jpg") );      
+		System.out.println("ModernaLjubavnaTematikaObimnoDelo");
+end
+
+rule "ModernaLjubavnaTematikaKraceDelo"
+lock-on-active true
+agenda-group "ProzaIstorijska"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Moderna"    
+        && ljubavnaTematika == "Prisutna"   
+        && velicinaDela == "Obimno delo"        
+        )
+	then
+        String[] dela = {"Lav Tolstoj - Rat i mir"};  		
+        k.setPreporucenaDela(dela);           
+     	wizard.addText("ProzaIstorijska","ModernaLjubavnaTematikaKraceDelo", null, dela);
+     	wizard.addImage("ProzaIstorijska",
+	         "ModernaLjubavnaTematikaObimnoDelo", null,
+			 new ImageData("/image/resenja/Lav Tolstoj Rat i Mir.jpg") );         
+		System.out.println("ModernaLjubavnaTematikaKraceDelo");
+end
+
+
+rule "ModernaPsiholoskiProfilisaniLikovi"
+lock-on-active true
+agenda-group "ProzaIstorijska"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Moderna"     
+        && ljubavnaTematika == "Nije prisutna"         
+        && psiholoskiProfilisaniLikovi == "Da"
+        )
+	then
+        String[] dela = {"Dolstojevski - Brca Karamanov"};  		
+        k.setPreporucenaDela(dela);           
+     	
+     	wizard.addText("ProzaIstorijska","ModernaPsiholoskiProfilisaniLikovi", null, dela);
+     	wizard.addImage("ProzaIstorijska",
+	         "ModernaLjubavnaTematikaObimnoDelo", null,
+			 new ImageData("/image/resenja/Dostojevski Braca Karamazov.jpg") );           
+		System.out.println("ModernaPsiholoskiProfilisaniLikovi");
+end
+
+rule "ModernaNePsiholoskiProfilisaniLikovi"
+lock-on-active true
+agenda-group "ProzaIstorijska"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Moderna"  
+        && ljubavnaTematika == "Nije prisutna"               
+        && psiholoskiProfilisaniLikovi == "Ne"
+        )
+	then
+        String[] dela = {"Gogolj - Mrtve duse"};  		
+        k.setPreporucenaDela(dela);           
+     	
+     	wizard.addText("ProzaIstorijska","ModernaNePsiholoskiProfilisaniLikovi", null, dela);   
+     	wizard.addImage("ProzaIstorijska",
+	         "ModernaNePsiholoskiProfilisaniLikovi", null,
+			 new ImageData("/image/resenja/Gogolj Mrtve Duse.jpg") );       
+		System.out.println("ModernaNePsiholoskiProfilisaniLikovi");
+end
+
+
+rule "ModernaPsiholoskiProfilisaniSvejedno"
+lock-on-active true
+agenda-group "ProzaIstorijska"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Moderna"  
+        && ljubavnaTematika == "Nije prisutna"               
+        && psiholoskiProfilisaniLikovi == "Svejedno"
+        
+        )
+	then
+        String[] dela = {"T. Man - Buddenbrooks"};  		
+        k.setPreporucenaDela(dela);           
+     	
+     	wizard.addText("ProzaIstorijska","ModernaPsiholoskiProfilisaniSvejedno", null, dela);  
+ 	    wizard.addImage("ProzaIstorijska",
+	         "ModernaPsiholoskiProfilisaniSvejedno", null,
+			 new ImageData("/image/resenja/T Mann Buddenbrooks.jpg") );        
+		System.out.println("ModernaPsiholoskiProfilisaniSvejedno");
+end
+
+
+/*Proza filozofska*/
+rule "ProzaFilozofska"
+	lock-on-active true
+    when
+        k: Knizevnost(
+	        knjizevniRod == "Proza"
+	        && kategorijaProznihDela == "Filozofska"
+	        
+	        && preporucenoDelo == null
+	        && preporucenaDela == null
+        )
+    then                    
+        drools.setFocus("ProzaFilozofska");
+        wizard.addTextStrategic(null,"ProzaFilozofska",null,null);
+        System.out.println("ProzaFilozofska");      
+end
+
+rule "FilozofskaAnticka"
+lock-on-active true
+agenda-group "ProzaFilozofska"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Anticka"                      
+        )
+	then
+        String[] dela = {"Eksotericni Spisi","HipomneatskiSpisi"};  		
+        k.setPreporucenaDela(dela);           
+     	wizard.addText("ProzaFilozofska","FilozofskaAnticka", null, dela);    
+ 	 	wizard.addImage("ProzaFilozofska",
+	         "FilozofskaAnticka", null,
+			 new ImageData("/image/resenja/Eksorericni spisi.jpg") ); 
+  	 	wizard.addImage("ProzaIstorijska",
+	         "ProzaFilozofska", null,
+			 new ImageData("/image/resenja/Hiposomatski spis.jpg") );     
+		System.out.println("FilozofskaAnticka");
+end
+
+
+rule "SrednjeVekovniReligiozni"
+lock-on-active true
+agenda-group "ProzaFilozofska"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Srednji vek" 
+        && karakterDela == "Religiozni"                             
+        )
+	then
+        String[] dela = {"Dzon Miston - Izgubljeni raj"};  		
+        k.setPreporucenaDela(dela);           
+        
+     	wizard.addText("ProzaFilozofska","SrednjeVekovniReligiozni", null, dela);      
+ 	 	wizard.addImage("ProzaIstorijska",
+	         "SrednjeVekovniReligiozni", null,
+			 new ImageData("/image/resenja/Dzon Miton Izgubljeni Raj.jpg") );  
+		System.out.println("SrednjeVekovniReligiozni");
+end
+
+rule "SrednjeVekovniDrustveni"
+lock-on-active true
+agenda-group "ProzaFilozofska"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Srednji vek" 
+        && karakterDela == "Drustveni"                      
+        )
+	then
+        String[] dela = {"Erazmo Roterdamski - Pohvala i ludost"};  		
+        k.setPreporucenaDela(dela);           
+        
+     	wizard.addText("ProzaFilozofska","SrednjeVekovniDrustveni", null, dela);    
+     	wizard.addImage("ProzaIstorijska",
+	         "SrednjeVekovniDrustveni", null,
+			 new ImageData("/image/resenja/Erazmo Roterdamski Pohvala Ludosti.jpg") );      
+		System.out.println("SrednjeVekovniDrustveni");
+end
+
+
+rule "ModernaDominantniLikoviDrustveni"
+lock-on-active true
+agenda-group "ProzaFilozofska"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Moderna"
+        && dominanatniLikovi == true
+        && karakterDela == "Drustveni" 
+                             
+        )
+	then
+        String[] dela = {"T. Man - Carobni breg"};  		
+        k.setPreporucenaDela(dela);           
+        
+     	wizard.addText("ProzaFilozofska","ModernaDominantniLikoviDrustveni", null, dela);  
+ 	    wizard.addImage("ProzaFilozofska",
+	         "SrednjeVekovniDrustveni", null,
+			 new ImageData("/image/resenja/Tomas Man Carobni Breg.jpg") );         
+		System.out.println("ModernaDominantniLikoviDrustveni");
+end
+
+
+rule "ModernaDominantniLikoviReligiozni"
+lock-on-active true
+agenda-group "ProzaFilozofska"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Moderna"
+        && dominanatniLikovi == true
+        && karakterDela == "Religiozni" 
+                             
+        )
+	then
+        String[] dela = {"Z. Sarmago - Jevandjele po Isusu Hristu"};  		
+        k.setPreporucenaDela(dela);           
+        
+     	wizard.addText("ProzaFilozofska","ModernaDominantniLikoviReligiozni", null, dela); 
+     	wizard.addImage("ProzaFilozofska",
+	         "ModernaDominantniLikoviReligiozni", null,
+			 new ImageData("/image/resenja/Saramago Jevandjelje po Isusu Hristu.jpg") );        
+		System.out.println("ModernaDominantniLikoviReligiozni");
+end
+
+
+rule "ModernaDominantnaFabulaObimnoDelo"
+lock-on-active true
+agenda-group "ProzaFilozofska"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Moderna"
+        && dominantnaFabula == true
+        && velicinaDela == "Obimno delo" 
+                             
+        )
+	then
+        String[] dela = {"Lav Tolstoj - Ana Karenjina"};  		
+        k.setPreporucenaDela(dela);  
+                 
+     	wizard.addText("ProzaFilozofska","ModernaDominantnaFabulaObimnoDelo", null, dela);     
+     	wizard.addImage("ProzaFilozofska",
+	         "ModernaDominantnaFabulaObimnoDelo", null,
+			 new ImageData("/image/resenja/Lav Tolstoj Ana Karenjina.jpg") );      
+		System.out.println("ModernaDominantnaFabulaObimnoDelo");
+end
+
+
+rule "ModernaDominantnaFabulaKratkoDelo"
+lock-on-active true
+agenda-group "ProzaFilozofska"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Moderna"
+        && dominantnaFabula == true
+        && velicinaDela == "Kratko delo"  
+                             
+        )
+	then
+        String[] dela = {"Tomas Man - Smrt u Venediji"};  		
+        k.setPreporucenaDela(dela);           
+        
+     	wizard.addText("ProzaFilozofska","ModernaDominantnaFabulaKratkoDelo", null, dela);
+ 	    wizard.addImage("ProzaFilozofska",
+	         "ModernaDominantnaFabulaKratkoDelo", null,
+			 new ImageData("/image/resenja/Tomas Man Smrt u Veneciji.jpg") );         
+		System.out.println("ModernaDominantnaFabulaKratkoDelo");
+end
+
+
+rule "ModernaDominantnaFabulaiLubavPrvoLice"
+lock-on-active true
+agenda-group "ProzaFilozofska"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Moderna"
+        && dominantnaFabula == true
+        && dominanatniLikovi == true
+        && tipPripovedaca == "1 lice"
+                             
+        )
+	then
+        String[] dela = {"M. Prust - U potrazi za izgubljenim vrmenom"};  		
+        k.setPreporucenaDela(dela);           
+        
+     	wizard.addText("ProzaFilozofska","ModernaDominantnaFabulaiLubavPrvoLice", null, dela);   
+     	wizard.addImage("ProzaFilozofska",
+	         "ModernaDominantnaFabulaiLubavPrvoLice", null,
+			 new ImageData("/image/resenja/Marsel Prust U traganju za izgubljenim vremenom.jpg") );         
+		System.out.println("ModernaDominantnaFabulaiLubavPrvoLice");
+end
+
+
+rule "ModernaDominantnaFabulaiLubavTreceLice"
+lock-on-active true
+agenda-group "ProzaFilozofska"
+	when
+     	k: Knizevnost(
+        vremeskiPeriod == "Moderna"
+        && dominantnaFabula == true
+        && dominanatniLikovi == true
+        && tipPripovedaca == "3 lice"
+                             
+        )
+	then
+        String[] dela = {"F.M. Dostojevski Zlocin i kazna"};  		
+        k.setPreporucenaDela(dela);           
+        
+     	wizard.addText("ProzaFilozofska","ModernaDominantnaFabulaiLubavTreceLice", null, dela);  
+     	wizard.addImage("ProzaFilozofska",
+	         "ModernaDominantnaFabulaiLubavTreceLice", null,
+			 new ImageData("/image/resenja/Dostojevski Zlocin i kazna.jpg") );         
+		System.out.println("ModernaDominantnaFabulaiLubavTreceLice");
+end
+
