@@ -65,7 +65,7 @@ public class KoordinatorForm {
     	
     	wizard = getJEFFWizardWithInterface();
 
-		wizard.setTitle("Ekspertni sistem za preporuku književnih dela za čitanje iz svedske književnosti");			
+		wizard.setTitle("Ekspertni sistem za preporuku književnih dela za čitanje iz svetske književnosti");			
 		wizard.createExplanation();
 
 		k = new Knizevnost();
@@ -87,7 +87,7 @@ public class KoordinatorForm {
     
 	private JEFFWizard getJEFFWizardWithInterface() {
 		//return new JEFFWizard("Mladen", "srb", "RS", "Auto-moto Savez prepruke", true);
-		return new JEFFWizard("Mladen", null, null, "Svedska književnost preporuka za čitanje", true);
+		return new JEFFWizard("Mladen", null, null, "Svetska književnost preporuka za čitanje", true);
 		
 	}
 	
