@@ -9,7 +9,7 @@ public class MainFrame extends JFrame{
 	OpstaEkranskaForma oef;
 	
 	 public MainFrame() {
-	        super("Ekspertni sistem za davanje preporuke za čitanje dela iz svetske književnosti");
+	        super("Ekspertni sistem za davanje preporuka za čitanje dela iz svetske književnosti");
 	        kreirajKomponenteEkranskeForme();
 	        postaviMainPanel();
 	        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

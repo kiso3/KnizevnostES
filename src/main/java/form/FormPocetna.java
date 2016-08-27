@@ -26,7 +26,7 @@ public class FormPocetna extends OpstaEkranskaForma{
 	}
 	
 	void  postaviLblPoruka(){
-		lblPoruka.setText("Ekspertni sistem za davanje preporuke za čitanje dela iz svetske književnosti");
+		lblPoruka.setText("Ekspertni sistem za davanje preporuka za čitanje dela iz svetske književnosti");
 		lblPoruka.setSize(lblPoruka.getPreferredSize());
 		lblPoruka.setLocation(10, 10);
         add(lblPoruka);        	
